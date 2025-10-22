@@ -17,7 +17,7 @@ TODO: Fill in this table with correct information.
 |---------------------------|--------------|-----------|
 | UCSBDiningCommonsMenuItem |              |           |
 | UCSBOrganization          |              |           |
-| RecommendationRequest     |              |           |
+| RecommendationRequest     |Sriya Vollala |sriya-vollala|
 | MenuItemReview            |              |           |
 | HelpRequest               |              |           |
 | Articles                  |              |           |
