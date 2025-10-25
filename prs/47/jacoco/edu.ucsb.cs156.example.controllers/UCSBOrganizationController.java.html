@@ -94,9 +94,9 @@ import org.springframework.web.bind.annotation.RestController;
 <span class="fc" id="L94">    UCSBOrganization ucsbOrganization =</span>
         ucsbOrganizationRepository
 <span class="fc" id="L96">            .findById(id)</span>
-<span class="pc" id="L97">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+<span class="fc" id="L97">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
 
-<span class="nc" id="L99">    return ucsbOrganization;</span>
+<span class="fc" id="L99">    return ucsbOrganization;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
