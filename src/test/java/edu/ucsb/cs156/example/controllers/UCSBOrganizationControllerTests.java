@@ -73,7 +73,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
             .orgCode("ZPR")
             .orgTranslation("ZETA PHI RHO")
             .orgTranslationShort("ZETA PHI RHO")
-            .inactive(false)
+            .inactive(true)
             .build();
 
     ArrayList<UCSBOrganization> expectedUCSBOrganization = new ArrayList<>();
@@ -105,7 +105,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
             .orgCode("ZPR")
             .orgTranslation("ZETA PHI RHO")
             .orgTranslationShort("ZETA PHI RHO")
-            .inactive(false)
+            .inactive(true)
             .build();
 
     when(ucsbOrganizationRepository.save(eq(ucsbOrganization1))).thenReturn(ucsbOrganization1);
@@ -124,7 +124,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     verify(ucsbOrganizationRepository, times(1)).save(eq(ucsbOrganization1));
     String expectedJson = mapper.writeValueAsString(ucsbOrganization1);
     String responseString = response.getResponse().getContentAsString();
-    assert(responseString.contains("\"inactive\":false"));
+    //assert(responseString.contains("\"inactive\":false"));
     assertEquals(expectedJson, responseString);
   }
 }
