@@ -1,8 +1,6 @@
 package edu.ucsb.cs156.example.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +22,7 @@ public class UCSBOrganization {
   // private long id;
 
   private String orgCode;
+
   private String orgTranslationShort;
   private String orgTranslation;
   boolean inactive;

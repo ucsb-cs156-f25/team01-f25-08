@@ -1,112 +1,96 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ucsb.cs156.example.ControllerTestCase;
-import edu.ucsb.cs156.example.entities.UCSBDate;
-import edu.ucsb.cs156.example.repositories.UCSBDateRepository;
+import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
-import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
-import edu.ucsb.cs156.example.entities.UCSBOrganization;
-import java.time.ZonedDateTime;
-
-
 @WebMvcTest(controllers = UCSBOrganizationController.class)
 @Import(TestConfig.class)
-public class UCSBOrganizationControllerTests extends ControllerTestCase{
-    @MockBean 
-    UCSBOrganizationRepository ucsbOrganizationRepository;
+public class UCSBOrganizationControllerTests extends ControllerTestCase {
+  @MockBean UCSBOrganizationRepository ucsbOrganizationRepository;
 
-    @MockBean 
-    UserRepository userRepository;
+  @MockBean UserRepository userRepository;
 
-    // @Autowired
-    // ObjectMapper mapper; 
+  // @Autowired
+  // ObjectMapper mapper;
 
+  @Test
+  public void logged_out_users_cannot_get_all() throws Exception {
+    mockMvc
+        .perform(get("/api/ucsborganization/all"))
+        .andExpect(status().is(403)); // logged out users can't get all
+  }
 
-    @Test
-    public void logged_out_users_cannot_get_all() throws Exception {
-        mockMvc.perform(get("/api/ucsborganization/all"))
-            .andExpect(status().is(403)); // logged out users can't get all
-    }
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void logged_in_users_can_get_all() throws Exception {
+    mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().is(200)); // logged
+  }
 
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void logged_in_users_can_get_all() throws Exception {
-        mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().is(200)); // logged
-    }
+  @Test
+  public void logged_out_users_cannot_post() throws Exception {
+    mockMvc.perform(post("/api/ucsborganization/post")).andExpect(status().is(403));
+  }
 
-    @Test
-    public void logged_out_users_cannot_post() throws Exception {
-      mockMvc.perform(post("/api/ucsborganization/post")).andExpect(status().is(403));
-    }
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void logged_in_regular_users_cannot_post() throws Exception {
+    mockMvc
+        .perform(post("/api/ucsborganization/post"))
+        .andExpect(status().is(403)); // only admins can post
+  }
 
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void logged_in_user_can_get_all_ucsbdates() throws Exception {
 
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void logged_in_regular_users_cannot_post() throws Exception {
-        mockMvc.perform(post("/api/ucsborganization/post"))
-                        .andExpect(status().is(403)); // only admins can post
-    }
+    // arrange
+    // LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void logged_in_user_can_get_all_ucsbdates() throws Exception {
+    // ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
 
-        // arrange
-        // LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-
-        // ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
-
-        UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
+    UCSBOrganization ucsbOrganization1 =
+        UCSBOrganization.builder()
             .orgCode("ZPR")
             .orgTranslation("ZETA PHI RHO")
             .orgTranslationShort("ZETA PHI RHO")
             .inactive(false)
             .build();
-        
 
-        ArrayList<UCSBOrganization> expectedUCSBOrganization = new ArrayList<>();
-        expectedUCSBOrganization.add(ucsbOrganization1);
+    ArrayList<UCSBOrganization> expectedUCSBOrganization = new ArrayList<>();
+    expectedUCSBOrganization.add(ucsbOrganization1);
 
-        when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
+    when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
 
-        // act
-        MvcResult response =
-            mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
+    // act
+    MvcResult response =
+        mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
 
-        // assert
+    // assert
 
-        verify(ucsbOrganizationRepository, times(1)).findAll();
-        String expectedJson = mapper.writeValueAsString(expectedUCSBOrganization);
-        String responseString = response.getResponse().getContentAsString();
-        assertEquals(expectedJson, responseString);
+    verify(ucsbOrganizationRepository, times(1)).findAll();
+    String expectedJson = mapper.writeValueAsString(expectedUCSBOrganization);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
   }
 
   @WithMockUser(roles = {"ADMIN", "USER"})
@@ -116,13 +100,13 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
 
     // ZonedDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
-        .orgCode("ZPR")
-        .orgTranslation("ZETA PHI RHO")
-        .orgTranslationShort("ZETA PHI RHO")
-        .inactive(false)
-        .build();
-    
+    UCSBOrganization ucsbOrganization1 =
+        UCSBOrganization.builder()
+            .orgCode("ZPR")
+            .orgTranslation("ZETA PHI RHO")
+            .orgTranslationShort("ZETA PHI RHO")
+            .inactive(false)
+            .build();
 
     when(ucsbOrganizationRepository.save(eq(ucsbOrganization1))).thenReturn(ucsbOrganization1);
 
@@ -141,6 +125,4 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
   }
-
-
 }

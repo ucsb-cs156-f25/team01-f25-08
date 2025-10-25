@@ -1,99 +1,82 @@
 package edu.ucsb.cs156.example.controllers;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.ucsb.cs156.example.entities.UCSBDate;
-import edu.ucsb.cs156.example.errors.EntityNotFoundException;
-import edu.ucsb.cs156.example.repositories.UCSBDateRepository;
+import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
-import edu.ucsb.cs156.example.entities.UCSBOrganization;
-
-
-
 
 /** This is a REST controller for UCSBOrganization */
 @Tag(name = "UCSBOrganization")
 @RequestMapping("/api/ucsborganization")
 @RestController
 @Slf4j
-public class UCSBOrganizationController extends ApiController{
-    
-    @Autowired 
-    UCSBOrganizationRepository ucsbOrganizationRepository;
+public class UCSBOrganizationController extends ApiController {
 
-    /**
-     * List all UCSB dates
-     *
-     * @return an iterable of UCSBDate
-     */
-    @Operation(summary = "List all ucsb dates")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/all")
-    public Iterable<UCSBOrganization> allUCSBOrganization() {
-        Iterable<UCSBOrganization> ucsbOrganization = ucsbOrganizationRepository.findAll();
-        return ucsbOrganization;
-    }
+  @Autowired UCSBOrganizationRepository ucsbOrganizationRepository;
 
-      /**
-     * Create a new UCSBOrganization
-     *
-     * @param orgCode the UCSBOrganization orgCode
-     * @param orgTranslationShort the UCSBOrganization orgTranslationShort
-     * @param orgTranslation the UCSBOrganization orgTranslation
-     * @param inactive the UCSBOrganization inactive
-     * @return the saved UCSBOrganization
-     */
-    @Operation(summary = "Create a new UCSBOrganization")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/post")
-    public UCSBOrganization postUCSBOrganization(
-        @Parameter(name = "orgCode") @RequestParam String orgCode,
-        @Parameter(name = "orgTranslationShort") @RequestParam String orgTranslationShort,
-        @Parameter(name = "orgTranslation") @RequestParam String orgTranslation,
-        @Parameter(name = "inactive") @RequestParam Boolean inactive
-    )
-        // @Parameter(
-        //         name = "UCSBOrganizationTime",
-        //         description =
-        //             "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see https://en.wikipedia.org/wiki/ISO_8601)")
-        //     @RequestParam("UCSBOrganizationTime")
-        //     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        //     ZonedDateTime UCSBOrganizationTime)
-        throws JsonProcessingException {
+  /**
+   * List all UCSB dates
+   *
+   * @return an iterable of UCSBDate
+   */
+  @Operation(summary = "List all ucsb dates")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("/all")
+  public Iterable<UCSBOrganization> allUCSBOrganization() {
+    Iterable<UCSBOrganization> ucsbOrganization = ucsbOrganizationRepository.findAll();
+    return ucsbOrganization;
+  }
 
-        // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        // See: https://www.baeldung.com/spring-date-parameters
+  /**
+   * Create a new UCSBOrganization
+   *
+   * @param orgCode the UCSBOrganization orgCode
+   * @param orgTranslationShort the UCSBOrganization orgTranslationShort
+   * @param orgTranslation the UCSBOrganization orgTranslation
+   * @param inactive the UCSBOrganization inactive
+   * @return the saved UCSBOrganization
+   */
+  @Operation(summary = "Create a new UCSBOrganization")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PostMapping("/post")
+  public UCSBOrganization postUCSBOrganization(
+      @Parameter(name = "orgCode") @RequestParam String orgCode,
+      @Parameter(name = "orgTranslationShort") @RequestParam String orgTranslationShort,
+      @Parameter(name = "orgTranslation") @RequestParam String orgTranslation,
+      @Parameter(name = "inactive") @RequestParam Boolean inactive)
+      // @Parameter(
+      //         name = "UCSBOrganizationTime",
+      //         description =
+      //             "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see
+      // https://en.wikipedia.org/wiki/ISO_8601)")
+      //     @RequestParam("UCSBOrganizationTime")
+      //     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      //     ZonedDateTime UCSBOrganizationTime)
+      throws JsonProcessingException {
 
-        // log.info("UCSBOrganizationTime={}", UCSBOrganizationTime);
-        
-        UCSBOrganization ucsbOrganization = new UCSBOrganization();
-        ucsbOrganization.setOrgCode(orgCode);
-        ucsbOrganization.setOrgTranslation(orgTranslation);
-        ucsbOrganization.setOrgTranslationShort(orgTranslationShort);
-        ucsbOrganization.setInactive(inactive);
+    // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    // See: https://www.baeldung.com/spring-date-parameters
 
-        UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);
+    // log.info("UCSBOrganizationTime={}", UCSBOrganizationTime);
 
-        return savedUCSBOrganization;
-    }
+    UCSBOrganization ucsbOrganization = new UCSBOrganization();
+    ucsbOrganization.setOrgCode(orgCode);
+    ucsbOrganization.setOrgTranslation(orgTranslation);
+    ucsbOrganization.setOrgTranslationShort(orgTranslationShort);
+    ucsbOrganization.setInactive(inactive);
+
+    UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);
+
+    return savedUCSBOrganization;
+  }
 }
