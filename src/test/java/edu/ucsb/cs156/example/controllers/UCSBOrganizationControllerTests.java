@@ -97,15 +97,9 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
 
     when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
 
-    // // act
-    // MvcResult response =
-    //     mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
-
-      // act
-    MvcResult response = mockMvc.perform(
-            get("/api/ucsborganization/all").with(csrf()))  // ✅ csrf + admin → executes controller
-        .andExpect(status().isOk())
-        .andReturn();
+    // act
+    MvcResult response =
+        mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
 
     // assert
 
@@ -115,37 +109,38 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     assertEquals(expectedJson, responseString);
   }
 
-//   @WithMockUser(roles = {"ADMIN", "USER"})
-//   @Test
-//   public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
-//     // arrange
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
+    // arrange
 
-//     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    ZonedDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-//     UCSBDate ucsbDate1 =
-//         UCSBDate.builder()
-//             .name("firstDayOfClasses")
-//             .quarterYYYYQ("20222")
-//             .localDateTime(ldt1)
-//             .build();
+    UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
+        .orgCode("ZPR")
+        .orgTranslation("ZETA PHI RHO")
+        .orgTranslationShort("ZETA PHI RHO")
+        .inactive(false)
+        .build();
+    
 
-//     when(ucsbDateRepository.save(eq(ucsbDate1))).thenReturn(ucsbDate1);
+    when(ucsbOrganizationRepository.save(eq(ucsbOrganization1))).thenReturn(ucsbOrganization1);
 
-//     // act
-//     MvcResult response =
-//         mockMvc
-//             .perform(
-//                 post("/api/ucsborganization/post?name=firstDayOfClasses&quarterYYYYQ=20222&localDateTime=2022-01-03T00:00:00")
-//                     .with(csrf()))
-//             .andExpect(status().isOk())
-//             .andReturn();
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/api/ucsborganization/post?orgCode=ZPR&orgTranslation=ZETA PHI RHO&orgTranslationShort=ZETA PHI RHO&inactive=false")
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
 
-//     // assert
-//     verify(ucsbDateRepository, times(1)).save(ucsbDate1);
-//     String expectedJson = mapper.writeValueAsString(ucsbDate1);
-//     String responseString = response.getResponse().getContentAsString();
-//     assertEquals(expectedJson, responseString);
-//   }
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).save(eq(ucsbOrganization1));
+    String expectedJson = mapper.writeValueAsString(ucsbOrganization1);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
 
 
 }
