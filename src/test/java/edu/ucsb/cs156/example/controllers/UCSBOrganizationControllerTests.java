@@ -82,7 +82,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     // arrange
     // LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
+    // ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
 
     UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
         .orgCode("ZPR")
@@ -97,9 +97,15 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
 
     when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
 
-    // act
-    MvcResult response =
-        mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
+    // // act
+    // MvcResult response =
+    //     mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
+
+      // act
+    MvcResult response = mockMvc.perform(
+            get("/api/ucsborganization/all").with(csrf()))  // ✅ csrf + admin → executes controller
+        .andExpect(status().isOk())
+        .andReturn();
 
     // assert
 
