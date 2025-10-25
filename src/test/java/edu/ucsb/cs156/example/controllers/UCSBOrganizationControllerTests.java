@@ -105,7 +105,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
             .orgCode("ZPR")
             .orgTranslation("ZETA PHI RHO")
             .orgTranslationShort("ZETA PHI RHO")
-            .inactive(false)
+            .inactive(true)
             .build();
 
     when(ucsbOrganizationRepository.save(eq(ucsbOrganization1))).thenReturn(ucsbOrganization1);
