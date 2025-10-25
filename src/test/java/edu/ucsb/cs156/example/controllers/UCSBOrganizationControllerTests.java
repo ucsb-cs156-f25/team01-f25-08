@@ -120,7 +120,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
             .andReturn();
 
     // assert
-    assertEquals(false, org.isInactive());
+    assertEquals(false, ucsbOrganization1.isInactive(), "inactive field should match request param");
     verify(ucsbOrganizationRepository, times(1)).save(eq(ucsbOrganization1));
     String expectedJson = mapper.writeValueAsString(ucsbOrganization1);
     String responseString = response.getResponse().getContentAsString();
