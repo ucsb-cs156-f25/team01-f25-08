@@ -76,37 +76,37 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     }
 
     @WithMockUser(roles = {"USER"})
-  @Test
-  public void logged_in_user_can_get_all_ucsbdates() throws Exception {
+    @Test
+    public void logged_in_user_can_get_all_ucsbdates() throws Exception {
 
-    // arrange
-    // LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+        // arrange
+        // LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    // ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
+        // ZonedDateTime zdt1= ZonedDateTime.parse("2022-01-03T00:00:00Z");
 
-    UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
-        .orgCode("ZPR")
-        .orgTranslation("ZETA PHI RHO")
-        .orgTranslationShort("ZETA PHI RHO")
-        .inactive(false)
-        .build();
-    
+        UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
+            .orgCode("ZPR")
+            .orgTranslation("ZETA PHI RHO")
+            .orgTranslationShort("ZETA PHI RHO")
+            .inactive(false)
+            .build();
+        
 
-    ArrayList<UCSBOrganization> expectedUCSBOrganization = new ArrayList<>();
-    expectedUCSBOrganization.add(ucsbOrganization1);
+        ArrayList<UCSBOrganization> expectedUCSBOrganization = new ArrayList<>();
+        expectedUCSBOrganization.add(ucsbOrganization1);
 
-    when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
+        when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
 
-    // act
-    MvcResult response =
-        mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
+        // act
+        MvcResult response =
+            mockMvc.perform(get("/api/ucsborganization/all")).andExpect(status().isOk()).andReturn();
 
-    // assert
+        // assert
 
-    verify(ucsbOrganizationRepository, times(1)).findAll();
-    String expectedJson = mapper.writeValueAsString(expectedUCSBOrganization);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
+        verify(ucsbOrganizationRepository, times(1)).findAll();
+        String expectedJson = mapper.writeValueAsString(expectedUCSBOrganization);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
   }
 
   @WithMockUser(roles = {"ADMIN", "USER"})
