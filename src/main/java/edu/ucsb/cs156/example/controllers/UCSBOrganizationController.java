@@ -2,6 +2,7 @@ package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,13 +56,13 @@ public class UCSBOrganizationController extends ApiController {
       @Parameter(name = "orgTranslation") @RequestParam String orgTranslation,
       @Parameter(name = "inactive") @RequestParam Boolean inactive)
       // @Parameter(
-      //         name = "UCSBOrganizationTime",
-      //         description =
-      //             "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see
+      // name = "UCSBOrganizationTime",
+      // description =
+      // "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see
       // https://en.wikipedia.org/wiki/ISO_8601)")
-      //     @RequestParam("UCSBOrganizationTime")
-      //     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-      //     ZonedDateTime UCSBOrganizationTime)
+      // @RequestParam("UCSBOrganizationTime")
+      // @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      // ZonedDateTime UCSBOrganizationTime)
       throws JsonProcessingException {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -78,5 +79,23 @@ public class UCSBOrganizationController extends ApiController {
     UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);
 
     return savedUCSBOrganization;
+  }
+
+  /**
+   * Get a single UCSBOrganization by id
+   *
+   * @param id the id of the date
+   * @return a UCSBOrganization
+   */
+  @Operation(summary = "Get a single UCSBOrganization")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public UCSBOrganization getById(@Parameter(name = "id") @RequestParam Long id) {
+    UCSBOrganization ucsbOrganization =
+        ucsbOrganizationRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, id));
+
+    return ucsbOrganization;
   }
 }
