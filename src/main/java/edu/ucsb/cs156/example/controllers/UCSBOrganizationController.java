@@ -32,7 +32,7 @@ import edu.ucsb.cs156.example.entities.UCSBOrganization;
 
 
 /** This is a REST controller for UCSBOrganization */
-@Tag(name = "UCSBOrganiza")
+@Tag(name = "UCSBOrganization")
 @RequestMapping("/api/ucsborganization")
 @RestController
 @Slf4j
@@ -91,7 +91,7 @@ public class UCSBOrganizationController extends ApiController{
         ucsbOrganization.setOrgTranslationShort(orgTranslationShort);
         ucsbOrganization.setInactive(inactive);
 
-        UCSBOrganization savedUCSBOrganization = UCSBOrganizationRepository.save(ucsbOrganization);
+        UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);
 
         return savedUCSBOrganization;
     }
