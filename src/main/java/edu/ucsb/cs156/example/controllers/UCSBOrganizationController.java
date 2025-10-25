@@ -70,20 +70,21 @@ public class UCSBOrganizationController extends ApiController{
         @Parameter(name = "orgCode") @RequestParam String orgCode,
         @Parameter(name = "orgTranslationShort") @RequestParam String orgTranslationShort,
         @Parameter(name = "orgTranslation") @RequestParam String orgTranslation,
-        @Parameter(name = "inactive") @RequestParam Boolean inactive,
-        @Parameter(
-                name = "UCSBOrganizationTime",
-                description =
-                    "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see https://en.wikipedia.org/wiki/ISO_8601)")
-            @RequestParam("UCSBOrganizationTime")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime UCSBOrganizationTime)
+        @Parameter(name = "inactive") @RequestParam Boolean inactive
+    )
+        // @Parameter(
+        //         name = "UCSBOrganizationTime",
+        //         description =
+        //             "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SSZ; see https://en.wikipedia.org/wiki/ISO_8601)")
+        //     @RequestParam("UCSBOrganizationTime")
+        //     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        //     ZonedDateTime UCSBOrganizationTime)
         throws JsonProcessingException {
 
         // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         // See: https://www.baeldung.com/spring-date-parameters
 
-        log.info("UCSBOrganizationTime={}", UCSBOrganizationTime);
+        // log.info("UCSBOrganizationTime={}", UCSBOrganizationTime);
         
         UCSBOrganization ucsbOrganization = new UCSBOrganization();
         ucsbOrganization.setOrgCode(orgCode);
