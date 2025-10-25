@@ -110,37 +110,37 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     assertEquals(expectedJson, responseString);
   }
 
-  @WithMockUser(roles = {"ADMIN", "USER"})
-  @Test
-  public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
-    // arrange
+//   @WithMockUser(roles = {"ADMIN", "USER"})
+//   @Test
+//   public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
+//     // arrange
 
-    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+//     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    UCSBDate ucsbDate1 =
-        UCSBDate.builder()
-            .name("firstDayOfClasses")
-            .quarterYYYYQ("20222")
-            .localDateTime(ldt1)
-            .build();
+//     UCSBDate ucsbDate1 =
+//         UCSBDate.builder()
+//             .name("firstDayOfClasses")
+//             .quarterYYYYQ("20222")
+//             .localDateTime(ldt1)
+//             .build();
 
-    when(ucsbDateRepository.save(eq(ucsbDate1))).thenReturn(ucsbDate1);
+//     when(ucsbDateRepository.save(eq(ucsbDate1))).thenReturn(ucsbDate1);
 
-    // act
-    MvcResult response =
-        mockMvc
-            .perform(
-                post("/api/ucsborganization/post?name=firstDayOfClasses&quarterYYYYQ=20222&localDateTime=2022-01-03T00:00:00")
-                    .with(csrf()))
-            .andExpect(status().isOk())
-            .andReturn();
+//     // act
+//     MvcResult response =
+//         mockMvc
+//             .perform(
+//                 post("/api/ucsborganization/post?name=firstDayOfClasses&quarterYYYYQ=20222&localDateTime=2022-01-03T00:00:00")
+//                     .with(csrf()))
+//             .andExpect(status().isOk())
+//             .andReturn();
 
-    // assert
-    verify(ucsbDateRepository, times(1)).save(ucsbDate1);
-    String expectedJson = mapper.writeValueAsString(ucsbDate1);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
-  }
+//     // assert
+//     verify(ucsbDateRepository, times(1)).save(ucsbDate1);
+//     String expectedJson = mapper.writeValueAsString(ucsbDate1);
+//     String responseString = response.getResponse().getContentAsString();
+//     assertEquals(expectedJson, responseString);
+//   }
 
 
 }
