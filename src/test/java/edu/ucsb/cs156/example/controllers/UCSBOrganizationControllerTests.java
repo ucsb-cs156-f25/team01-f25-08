@@ -114,7 +114,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
   public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
     // arrange
 
-    ZonedDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    // ZonedDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
     UCSBOrganization ucsbOrganization1 = UCSBOrganization.builder()
         .orgCode("ZPR")
