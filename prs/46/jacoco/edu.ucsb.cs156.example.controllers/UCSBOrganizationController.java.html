@@ -35,8 +35,8 @@ import edu.ucsb.cs156.example.entities.UCSBOrganization;
 @Tag(name = &quot;UCSBOrganization&quot;)
 @RequestMapping(&quot;/api/ucsborganization&quot;)
 @RestController
-<span class="nc" id="L38">@Slf4j</span>
-<span class="nc" id="L39">public class UCSBOrganizationController extends ApiController{</span>
+<span class="fc" id="L38">@Slf4j</span>
+<span class="fc" id="L39">public class UCSBOrganizationController extends ApiController{</span>
     
     @Autowired 
     UCSBOrganizationRepository ucsbOrganizationRepository;
@@ -50,8 +50,8 @@ import edu.ucsb.cs156.example.entities.UCSBOrganization;
     @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
     @GetMapping(&quot;/all&quot;)
     public Iterable&lt;UCSBOrganization&gt; allUCSBOrganization() {
-<span class="nc" id="L53">        Iterable&lt;UCSBOrganization&gt; ucsbOrganization = ucsbOrganizationRepository.findAll();</span>
-<span class="nc" id="L54">        return ucsbOrganization;</span>
+<span class="fc" id="L53">        Iterable&lt;UCSBOrganization&gt; ucsbOrganization = ucsbOrganizationRepository.findAll();</span>
+<span class="fc" id="L54">        return ucsbOrganization;</span>
     }
 
       /**
