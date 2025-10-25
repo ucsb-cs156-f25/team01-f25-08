@@ -39,15 +39,15 @@ import java.time.ZonedDateTime;
 
 @WebMvcTest(controllers = UCSBOrganizationController.class)
 @Import(TestConfig.class)
-public class UCSBOrganizationControllerTests {
+public class UCSBOrganizationControllerTests extends ControllerTestCase{
     @MockBean 
     UCSBOrganizationRepository ucsbOrganizationRepository;
 
     @MockBean 
     UserRepository userRepository;
 
-    @Autowired
-    ObjectMapper mapper; 
+    // @Autowired
+    // ObjectMapper mapper; 
 
 
     @Test
