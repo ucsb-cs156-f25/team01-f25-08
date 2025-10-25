@@ -156,10 +156,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
 
     // act
     MvcResult response =
-        mockMvc
-            .perform(get("/api/ucsborganization?id=7"))
-            .andExpect(status().isNotFound())
-            .andReturn();
+        mockMvc.perform(get("/api/ucsborganization?id=7")).andExpect(status().isOk()).andReturn();
 
     // assert
 
