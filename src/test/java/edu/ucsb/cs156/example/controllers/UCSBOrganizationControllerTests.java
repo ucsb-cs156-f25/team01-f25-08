@@ -96,7 +96,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase{
     expectedUCSBOrganization.add(ucsbOrganization1);
 
 
-    when(UCSBOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
+    when(ucsbOrganizationRepository.findAll()).thenReturn(expectedUCSBOrganization);
 
     // act
     MvcResult response =
