@@ -91,10 +91,10 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public UCSBOrganization getById(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="nc" id="L94">    UCSBOrganization ucsbOrganization =</span>
+<span class="fc" id="L94">    UCSBOrganization ucsbOrganization =</span>
         ucsbOrganizationRepository
-<span class="nc" id="L96">            .findById(id)</span>
-<span class="nc" id="L97">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+<span class="fc" id="L96">            .findById(id)</span>
+<span class="pc" id="L97">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
 
 <span class="nc" id="L99">    return ucsbOrganization;</span>
   }
