@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
    *
    * @return an iterable of UCSBDate
    */
-  @Operation(summary = &quot;List all ucsb dates&quot;)
+  @Operation(summary = &quot;List all ucsb organizations&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBOrganization&gt; allUCSBOrganization() {
