@@ -30,7 +30,7 @@ public class UCSBOrganizationController extends ApiController {
    *
    * @return an iterable of UCSBDate
    */
-  @Operation(summary = "List all ucsb dates")
+  @Operation(summary = "List all ucsb organizations")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/all")
   public Iterable<UCSBOrganization> allUCSBOrganization() {
