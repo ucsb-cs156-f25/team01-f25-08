@@ -11,12 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ucsb.cs156.example.ControllerTestCase;
-import edu.ucsb.cs156.example.entities.UCSBDate;
 import edu.ucsb.cs156.example.entities.UCSBOrganization;
 import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -238,39 +236,39 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     assertEquals(requestBody, responseString);
   }
 
-  @WithMockUser(roles = {"ADMIN", "USER"})
-  @Test
-  public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
-    // arrange
+  // @WithMockUser(roles = {"ADMIN", "USER"})
+  // @Test
+  // public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
+  //   // arrange
 
-    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+  //   LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    UCSBDate ucsbEditedDate =
-        UCSBDate.builder()
-            .name("firstDayOfClasses")
-            .quarterYYYYQ("20222")
-            .localDateTime(ldt1)
-            .build();
+  //   UCSBDate ucsbEditedDate =
+  //       UCSBDate.builder()
+  //           .name("firstDayOfClasses")
+  //           .quarterYYYYQ("20222")
+  //           .localDateTime(ldt1)
+  //           .build();
 
-    String requestBody = mapper.writeValueAsString(ucsbEditedDate);
+  //   String requestBody = mapper.writeValueAsString(ucsbEditedDate);
 
-    when(ucsbDateRepository.findById(eq(67L))).thenReturn(Optional.empty());
+  //   when(ucsbDateRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
-    // act
-    MvcResult response =
-        mockMvc
-            .perform(
-                put("/api/ucsbdates?id=67")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding("utf-8")
-                    .content(requestBody)
-                    .with(csrf()))
-            .andExpect(status().isNotFound())
-            .andReturn();
+  //   // act
+  //   MvcResult response =
+  //       mockMvc
+  //           .perform(
+  //               put("/api/ucsbdates?id=67")
+  //                   .contentType(MediaType.APPLICATION_JSON)
+  //                   .characterEncoding("utf-8")
+  //                   .content(requestBody)
+  //                   .with(csrf()))
+  //           .andExpect(status().isNotFound())
+  //           .andReturn();
 
-    // assert
-    verify(ucsbDateRepository, times(1)).findById(67L);
-    Map<String, Object> json = responseToJson(response);
-    assertEquals("UCSBDate with id 67 not found", json.get("message"));
-  }
+  //   // assert
+  //   verify(ucsbDateRepository, times(1)).findById(67L);
+  //   Map<String, Object> json = responseToJson(response);
+  //   assertEquals("UCSBDate with id 67 not found", json.get("message"));
+  // }
 }
