@@ -142,13 +142,13 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
   @DeleteMapping(&quot;&quot;)
   public Object deleteUCSBDate(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="nc" id="L145">    UCSBOrganization ucsbOrganization =</span>
+<span class="fc" id="L145">    UCSBOrganization ucsbOrganization =</span>
         ucsbOrganizationRepository
-<span class="nc" id="L147">            .findById(id)</span>
-<span class="nc" id="L148">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+<span class="fc" id="L147">            .findById(id)</span>
+<span class="fc" id="L148">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
 
-<span class="nc" id="L150">    ucsbOrganizationRepository.delete(ucsbOrganization);</span>
-<span class="nc" id="L151">    return genericMessage(&quot;UCSBOrganization with id %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L150">    ucsbOrganizationRepository.delete(ucsbOrganization);</span>
+<span class="fc" id="L151">    return genericMessage(&quot;UCSBOrganization with id %s deleted&quot;.formatted(id));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
