@@ -237,39 +237,38 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     assertEquals(requestBody, responseString);
   }
 
-  // @WithMockUser(roles = {"ADMIN", "USER"})
-  // @Test
-  // public void admin_cannot_edit_ucsbdate_that_does_not_exist() throws Exception {
-  //   // arrange
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_UCSBOrganization_that_does_not_exist() throws Exception {
+    // arrange
 
-  //   LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    UCSBOrganization ucsbOrganization1 =
+        UCSBOrganization.builder()
+            .orgCode("ZPR")
+            .orgTranslation("ZETA PHI RHO")
+            .orgTranslationShort("ZETA PHI RHO")
+            .inactive(true)
+            .build();
 
-  //   UCSBDate ucsbEditedDate =
-  //       UCSBDate.builder()
-  //           .name("firstDayOfClasses")
-  //           .quarterYYYYQ("20222")
-  //           .localDateTime(ldt1)
-  //           .build();
+    String requestBody = mapper.writeValueAsString(ucsbOrganization1);
 
-  //   String requestBody = mapper.writeValueAsString(ucsbEditedDate);
+    when(ucsbOrganizationRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
-  //   when(ucsbDateRepository.findById(eq(67L))).thenReturn(Optional.empty());
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsbdates?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
 
-  //   // act
-  //   MvcResult response =
-  //       mockMvc
-  //           .perform(
-  //               put("/api/ucsbdates?id=67")
-  //                   .contentType(MediaType.APPLICATION_JSON)
-  //                   .characterEncoding("utf-8")
-  //                   .content(requestBody)
-  //                   .with(csrf()))
-  //           .andExpect(status().isNotFound())
-  //           .andReturn();
-
-  //   // assert
-  //   verify(ucsbDateRepository, times(1)).findById(67L);
-  //   Map<String, Object> json = responseToJson(response);
-  //   assertEquals("UCSBDate with id 67 not found", json.get("message"));
-  // }
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).findById(67L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBOrganization with id 67 not found", json.get("message"));
+  }
 }
