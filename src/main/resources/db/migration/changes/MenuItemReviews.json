@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "MenuItemReviews"
+                    "tableName": "menuitemreviews"
                   }
                 }
               ]
@@ -27,7 +27,7 @@
                       "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "MenuItemReviews_pk"
+                        "primaryKeyName": "menuitemreviews_pk"
                       },
                       "name": "ID",
                       "type": "BIGINT"
@@ -65,7 +65,7 @@
                   }
                   
                 ],
-                "tableName": "MenuItemReviews"
+                "tableName": "menuitemreviews"
               }
             }
           ]
