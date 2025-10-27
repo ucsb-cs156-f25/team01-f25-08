@@ -42,10 +42,10 @@ public class MenuItemReviewController extends ApiController {
   /**
    * Create a new menu item review
    *
-   * @param itemid the id in the UCSBDiningCommonsMenuItems table of a menu item
-   * @param revieweremail the email of the reviewer
+   * @param itemId the id in the UCSBDiningCommonsMenuItems table of a menu item
+   * @param reviewerEmail the email of the reviewer
    * @param stars 0 to 5 stars
-   * @param datereviewed the timestamp of the review
+   * @param dateReviewed the timestamp of the review
    * @param comments the comments in the review
    * @return the saved menu item review
    */
