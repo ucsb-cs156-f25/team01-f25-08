@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "HELPREQUESTS"
+                    "tableName": "helprequests"
                   }
                 }
               ]
@@ -66,11 +66,11 @@
                   {
                     "column": {
                       "name": "SOLVED",
-                      "type": "VARCHAR"
+                      "type": "BOOLEAN"
                     }
                   }
                 ],
-                "tableName": "HELPREQUESTS"
+                "tableName": "helprequests"
               }
             }
           ]
