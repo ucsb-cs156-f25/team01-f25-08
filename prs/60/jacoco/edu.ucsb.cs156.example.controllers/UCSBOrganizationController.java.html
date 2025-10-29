@@ -7,11 +7,15 @@ import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;UCSBOrganization&quot;)
 @RequestMapping(&quot;/api/ucsborganization&quot;)
 @RestController
-<span class="fc" id="L23">@Slf4j</span>
-<span class="fc" id="L24">public class UCSBOrganizationController extends ApiController {</span>
+<span class="fc" id="L27">@Slf4j</span>
+<span class="fc" id="L28">public class UCSBOrganizationController extends ApiController {</span>
 
   @Autowired UCSBOrganizationRepository ucsbOrganizationRepository;
 
@@ -34,8 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBOrganization&gt; allUCSBOrganization() {
-<span class="fc" id="L37">    Iterable&lt;UCSBOrganization&gt; ucsbOrganization = ucsbOrganizationRepository.findAll();</span>
-<span class="fc" id="L38">    return ucsbOrganization;</span>
+<span class="fc" id="L41">    Iterable&lt;UCSBOrganization&gt; ucsbOrganization = ucsbOrganizationRepository.findAll();</span>
+<span class="fc" id="L42">    return ucsbOrganization;</span>
   }
 
   /**
@@ -70,15 +74,15 @@ import org.springframework.web.bind.annotation.RestController;
 
     // log.info(&quot;UCSBOrganizationTime={}&quot;, UCSBOrganizationTime);
 
-<span class="fc" id="L73">    UCSBOrganization ucsbOrganization = new UCSBOrganization();</span>
-<span class="fc" id="L74">    ucsbOrganization.setOrgCode(orgCode);</span>
-<span class="fc" id="L75">    ucsbOrganization.setOrgTranslation(orgTranslation);</span>
-<span class="fc" id="L76">    ucsbOrganization.setOrgTranslationShort(orgTranslationShort);</span>
-<span class="fc" id="L77">    ucsbOrganization.setInactive(inactive);</span>
+<span class="fc" id="L77">    UCSBOrganization ucsbOrganization = new UCSBOrganization();</span>
+<span class="fc" id="L78">    ucsbOrganization.setOrgCode(orgCode);</span>
+<span class="fc" id="L79">    ucsbOrganization.setOrgTranslation(orgTranslation);</span>
+<span class="fc" id="L80">    ucsbOrganization.setOrgTranslationShort(orgTranslationShort);</span>
+<span class="fc" id="L81">    ucsbOrganization.setInactive(inactive);</span>
 
-<span class="fc" id="L79">    UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);</span>
+<span class="fc" id="L83">    UCSBOrganization savedUCSBOrganization = ucsbOrganizationRepository.save(ucsbOrganization);</span>
 
-<span class="fc" id="L81">    return savedUCSBOrganization;</span>
+<span class="fc" id="L85">    return savedUCSBOrganization;</span>
   }
 
   /**
@@ -91,12 +95,60 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public UCSBOrganization getById(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L94">    UCSBOrganization ucsbOrganization =</span>
+<span class="fc" id="L98">    UCSBOrganization ucsbOrganization =</span>
         ucsbOrganizationRepository
-<span class="fc" id="L96">            .findById(id)</span>
-<span class="fc" id="L97">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+<span class="fc" id="L100">            .findById(id)</span>
+<span class="fc" id="L101">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
 
-<span class="fc" id="L99">    return ucsbOrganization;</span>
+<span class="fc" id="L103">    return ucsbOrganization;</span>
+  }
+
+  /**
+   * Update a single ucsborganization
+   *
+   * @param id id of the ucsb organization to update
+   * @param incoming the new ucsb organization
+   * @return the updated ucsb organization object
+   */
+  @Operation(summary = &quot;Update a single UCSBOrganization&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+  @PutMapping(&quot;&quot;)
+  public UCSBOrganization updateUCSBOrganization(
+      @Parameter(name = &quot;id&quot;) @RequestParam Long id,
+      @RequestBody @Valid UCSBOrganization incoming) {
+
+<span class="fc" id="L120">    UCSBOrganization ucsbOrganization =</span>
+        ucsbOrganizationRepository
+<span class="fc" id="L122">            .findById(id)</span>
+<span class="fc" id="L123">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+
+<span class="fc" id="L125">    ucsbOrganization.setOrgCode(incoming.getOrgCode());</span>
+<span class="fc" id="L126">    ucsbOrganization.setOrgTranslation(incoming.getOrgTranslation());</span>
+<span class="fc" id="L127">    ucsbOrganization.setOrgTranslationShort(incoming.getOrgTranslationShort());</span>
+<span class="fc" id="L128">    ucsbOrganization.setInactive(incoming.getInactive());</span>
+
+<span class="fc" id="L130">    ucsbOrganizationRepository.save(ucsbOrganization);</span>
+
+<span class="fc" id="L132">    return ucsbOrganization;</span>
+  }
+
+  /**
+   * Delete a UCSBOrganization
+   *
+   * @param id the id of the UCSBOrganization to delete
+   * @return a message indicating the UCSBOrganization was deleted
+   */
+  @Operation(summary = &quot;Delete a UCSBOrganization&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+  @DeleteMapping(&quot;&quot;)
+  public Object deleteUCSBDate(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
+<span class="fc" id="L145">    UCSBOrganization ucsbOrganization =</span>
+        ucsbOrganizationRepository
+<span class="fc" id="L147">            .findById(id)</span>
+<span class="fc" id="L148">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, id));</span>
+
+<span class="fc" id="L150">    ucsbOrganizationRepository.delete(ucsbOrganization);</span>
+<span class="fc" id="L151">    return genericMessage(&quot;UCSBOrganization with id %s deleted&quot;.formatted(id));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
