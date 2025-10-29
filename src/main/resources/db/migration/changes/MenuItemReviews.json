@@ -1,0 +1,75 @@
+{
+    "databaseChangeLog": [
+      {
+        "changeSet": {
+          "id": "MenuItemReviews-1",
+          "author": "krystelleb22",
+          "preConditions": [
+            {
+              "onFail": "MARK_RAN"
+            },
+            {
+              "not": [
+                {
+                  "tableExists": {
+                    "tableName": "menuitemreviews"
+                  }
+                }
+              ]
+            }
+          ],
+          "changes": [
+            {
+              "createTable": {
+                "columns": [
+                  {
+                    "column": {
+                      "autoIncrement": true,
+                      "constraints": {
+                        "primaryKey": true,
+                        "primaryKeyName": "menuitemreviews_pk"
+                      },
+                      "name": "ID",
+                      "type": "BIGINT"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "ITEM_ID",
+                      "type": "BIGINT"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "REVIEWER_EMAIL",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "STARS",
+                      "type": "INT"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "DATE_REVIEWED",
+                      "type": "TIMESTAMP"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "COMMENTS",
+                      "type": "TEXT"
+                    }
+                  }
+                  
+                ],
+                "tableName": "menuitemreviews"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
