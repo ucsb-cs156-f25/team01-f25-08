@@ -1,14 +1,12 @@
 package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.ucsb.cs156.example.entities.UCSBRecommendationRequest;
 import edu.ucsb.cs156.example.repositories.UCSBRecommendationRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,8 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UCSBRecommendationRequestController extends ApiController {
 
-  @Autowired
-  UCSBRecommendationRequestRepository ucsbRecommendationRequest;
+  @Autowired UCSBRecommendationRequestRepository ucsbRecommendationRequest;
 
   /**
    * List all records in table
@@ -36,7 +33,6 @@ public class UCSBRecommendationRequestController extends ApiController {
    */
   @Operation(summary = "List all records")
   @PreAuthorize("hasRole('ROLE_USER')")
-
   @GetMapping("/all")
   public Iterable<UCSBRecommendationRequest> allRecords() {
     Iterable<UCSBRecommendationRequest> records = ucsbRecommendationRequest.findAll();
@@ -63,7 +59,13 @@ public class UCSBRecommendationRequestController extends ApiController {
       @Parameter(name = "explanation") @RequestParam String explanation,
       @Parameter(name = "dateNeeded") @RequestParam LocalDateTime dateNeeded,
       @Parameter(name = "done") @RequestParam Boolean done,
-      @Parameter(name = "dateRequested", description = "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("dateRequested") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRequested)
+      @Parameter(
+              name = "dateRequested",
+              description =
+                  "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)")
+          @RequestParam("dateRequested")
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime dateRequested)
       throws JsonProcessingException {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
