@@ -3,7 +3,8 @@
 Instructions: <https://ucsb-cs156.github.io/f25/lab/team01.html>
 
 Deployments:
-* QA: <[https://team01-08-qa.dokku-17.cs.ucsb.edu](https://team01-08-qa.dokku-08.cs.ucsb.edu/)>
+* PROD: <https://team01-08.dokku-08.cs.ucsb.edu/>
+* QA: <https://team01-08-qa.dokku-08.cs.ucsb.edu/>
 
 TODO: Fill in this table with correct information. 
 
