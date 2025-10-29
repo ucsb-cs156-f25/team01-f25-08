@@ -1,11 +1,13 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -297,5 +299,60 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
     verify(ucsbRecommendationRequest, times(1)).findById(67L);
     Map<String, Object> json = responseToJson(response);
     assertEquals("UCSBRecommendationRequest with id 67 not found", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_delete_a_request() throws Exception {
+    // arrange
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+    UCSBRecommendationRequest record1 =
+        UCSBRecommendationRequest.builder()
+            .requesterEmail("sriya.vollala@gmail.com")
+            .professorEmail("sriyavollala@ucsb.edu")
+            .explanation("rara")
+            .dateNeeded(ldt1)
+            .dateRequested(ldt1)
+            .done(true)
+            .build();
+
+    when(ucsbRecommendationRequest.findById(eq(15L))).thenReturn(Optional.of(record1));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/ucsbrecommendationrequest?id=15").with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(ucsbRecommendationRequest, times(1)).findById(15L);
+    verify(ucsbRecommendationRequest, times(1)).delete(any());
+
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBRecommendationRequest with id 15 deleted", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_tries_to_delete_non_existant_request_and_gets_right_error_message()
+      throws Exception {
+    // arrange
+
+    when(ucsbRecommendationRequest.findById(eq(15L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/ucsbrecommendationrequest?id=15").with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(ucsbRecommendationRequest, times(1)).findById(15L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBRecommendationRequest with id 15 not found", json.get("message"));
   }
 }
