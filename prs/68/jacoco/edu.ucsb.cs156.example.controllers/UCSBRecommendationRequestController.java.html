@@ -6,10 +6,8 @@ import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBRecommendationRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,11 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;UCSBRecommendationRequest&quot;)
 @RequestMapping(&quot;/api/ucsbrecommendationrequest&quot;)
 @RestController
-<span class="fc" id="L29">@Slf4j</span>
-<span class="fc" id="L30">public class UCSBRecommendationRequestController extends ApiController {</span>
+<span class="fc" id="L28">@Slf4j</span>
+<span class="fc" id="L29">public class UCSBRecommendationRequestController extends ApiController {</span>
 
-  @Autowired
-  UCSBRecommendationRequestRepository ucsbRecommendationRequest;
+  @Autowired UCSBRecommendationRequestRepository ucsbRecommendationRequest;
 
   /**
    * List all records in table
@@ -41,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBRecommendationRequest&gt; allRecords() {
-<span class="fc" id="L44">    Iterable&lt;UCSBRecommendationRequest&gt; records = ucsbRecommendationRequest.findAll();</span>
-<span class="fc" id="L45">    return records;</span>
+<span class="fc" id="L42">    Iterable&lt;UCSBRecommendationRequest&gt; records = ucsbRecommendationRequest.findAll();</span>
+<span class="fc" id="L43">    return records;</span>
   }
 
   /**
@@ -55,11 +53,12 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public UCSBRecommendationRequest getById(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L58">    UCSBRecommendationRequest record = ucsbRecommendationRequest</span>
-<span class="fc" id="L59">        .findById(id)</span>
-<span class="fc" id="L60">        .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
+<span class="fc" id="L56">    UCSBRecommendationRequest record =</span>
+        ucsbRecommendationRequest
+<span class="fc" id="L58">            .findById(id)</span>
+<span class="fc" id="L59">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
 
-<span class="fc" id="L62">    return record;</span>
+<span class="fc" id="L61">    return record;</span>
   }
 
   /**
@@ -82,58 +81,61 @@ import org.springframework.web.bind.annotation.RestController;
       @Parameter(name = &quot;explanation&quot;) @RequestParam String explanation,
       @Parameter(name = &quot;dateNeeded&quot;) @RequestParam LocalDateTime dateNeeded,
       @Parameter(name = &quot;done&quot;) @RequestParam Boolean done,
-      @Parameter(name = &quot;dateRequested&quot;, description = &quot;date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)&quot;) @RequestParam(&quot;dateRequested&quot;) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRequested)
+      @Parameter(
+              name = &quot;dateRequested&quot;,
+              description =
+                  &quot;date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)&quot;)
+          @RequestParam(&quot;dateRequested&quot;)
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime dateRequested)
       throws JsonProcessingException {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-<span class="fc" id="L91">    log.info(&quot;localDateTime={}&quot;, dateRequested);</span>
+<span class="fc" id="L96">    log.info(&quot;localDateTime={}&quot;, dateRequested);</span>
 
-<span class="fc" id="L93">    UCSBRecommendationRequest record = new UCSBRecommendationRequest();</span>
-<span class="fc" id="L94">    record.setRequesterEmail(requesterEmail);</span>
-<span class="fc" id="L95">    record.setProfessorEmail(professorEmail);</span>
-<span class="fc" id="L96">    record.setExplanation(explanation);</span>
-<span class="fc" id="L97">    record.setDateRequested(dateRequested);</span>
-<span class="fc" id="L98">    record.setDateNeeded(dateNeeded);</span>
-<span class="fc" id="L99">    record.setDone(done);</span>
-<span class="fc" id="L100">    UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);</span>
+<span class="fc" id="L98">    UCSBRecommendationRequest record = new UCSBRecommendationRequest();</span>
+<span class="fc" id="L99">    record.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L100">    record.setProfessorEmail(professorEmail);</span>
+<span class="fc" id="L101">    record.setExplanation(explanation);</span>
+<span class="fc" id="L102">    record.setDateRequested(dateRequested);</span>
+<span class="fc" id="L103">    record.setDateNeeded(dateNeeded);</span>
+<span class="fc" id="L104">    record.setDone(done);</span>
+<span class="fc" id="L105">    UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);</span>
 
-<span class="fc" id="L102">    return savedRecRequest;</span>
+<span class="fc" id="L107">    return savedRecRequest;</span>
   }
 
   /**
    * Update a single date
    *
-   * @param id       id of the request to update
+   * @param id id of the request to update
    * @param incoming the new rerquest
    * @return the updated request object
    */
-
   @Operation(summary = &quot;Update a single request&quot;)
-
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
-
   @PutMapping(&quot;&quot;)
   public UCSBRecommendationRequest updateRequest(
+      @Parameter(name = &quot;id&quot;) @RequestParam Long id,
+      @RequestBody @Valid UCSBRecommendationRequest incoming) {
 
-      @Parameter(name = &quot;id&quot;) @RequestParam Long id, @RequestBody @Valid UCSBRecommendationRequest incoming) {
+<span class="fc" id="L124">    UCSBRecommendationRequest request1 =</span>
+        ucsbRecommendationRequest
+<span class="fc" id="L126">            .findById(id)</span>
+<span class="fc" id="L127">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
 
-<span class="nc" id="L122">    UCSBRecommendationRequest request1 = ucsbRecommendationRequest</span>
-<span class="nc" id="L123">        .findById(id)</span>
-<span class="nc" id="L124">        .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
+<span class="fc" id="L129">    request1.setRequesterEmail(incoming.getRequesterEmail());</span>
+<span class="fc" id="L130">    request1.setProfessorEmail(incoming.getProfessorEmail());</span>
+<span class="fc" id="L131">    request1.setExplanation(incoming.getExplanation());</span>
+<span class="fc" id="L132">    request1.setDateRequested(incoming.getDateRequested());</span>
+<span class="fc" id="L133">    request1.setDateNeeded(incoming.getDateNeeded());</span>
+<span class="fc" id="L134">    request1.setDone(incoming.getDone());</span>
+    ;
+<span class="fc" id="L136">    ucsbRecommendationRequest.save(request1);</span>
 
-<span class="nc" id="L126">    request1.setRequesterEmail(incoming.getRequesterEmail());</span>
-<span class="nc" id="L127">    request1.setProfessorEmail(incoming.getProfessorEmail());</span>
-<span class="nc" id="L128">    request1.setExplanation(incoming.getExplanation());</span>
-<span class="nc" id="L129">    request1.setDateRequested(incoming.getDateRequested());</span>
-<span class="nc" id="L130">    request1.setDateNeeded(incoming.getDateNeeded());</span>
-<span class="nc" id="L131">    request1.setDone(incoming.getDone());</span>
-
-<span class="nc" id="L133">    ucsbRecommendationRequest.save(request1);</span>
-
-<span class="nc" id="L135">    return request1;</span>
+<span class="fc" id="L138">    return request1;</span>
   }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
