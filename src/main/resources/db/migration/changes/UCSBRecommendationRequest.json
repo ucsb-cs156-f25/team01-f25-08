@@ -2,7 +2,7 @@
     "databaseChangeLog": [
       {
         "changeSet": {
-          "id": "UCSBRecommendationRequests-1",
+          "id": "UCSBRecommendationRequest-1",
           "author": "MattP",
           "preConditions": [
             {
@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "UCSBRECOMMENDATIONREQUESTS"
+                    "tableName": "ucsbrecommendationrequest"
                   }
                 }
               ]
@@ -27,7 +27,7 @@
                       "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "UCSBRECOMMENDATIONREQUESTS_PK"
+                        "primaryKeyName": "UCSBRECOMMENDATIONREQUEST_PK"
                       },
                       "name": "ID",
                       "type": "BIGINT"
@@ -70,7 +70,7 @@
                     }
                   }
                 ],
-                "tableName": "UCSBRECOMMENDATIONREQUESTS"
+                "tableName": "ucsbrecommendationrequest"
               }
             }
           ]

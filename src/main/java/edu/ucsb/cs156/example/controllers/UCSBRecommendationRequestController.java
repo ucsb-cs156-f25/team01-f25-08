@@ -1,12 +1,14 @@
 package edu.ucsb.cs156.example.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import edu.ucsb.cs156.example.entities.UCSBRecommendationRequest;
 import edu.ucsb.cs156.example.repositories.UCSBRecommendationRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,13 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /** This is a REST controller for UCSBDates */
-@Tag(name = "UCSBRecommendationRequestController") // fix
-@RequestMapping("/api/ucsbRecommendationRequest") // fix
+@Tag(name = "UCSBRecommendationRequest")
+@RequestMapping("/api/ucsbrecommendationrequest")
 @RestController
 @Slf4j
 public class UCSBRecommendationRequestController extends ApiController {
 
-  @Autowired UCSBRecommendationRequestRepository ucsbRecommendationRequest;
+  @Autowired
+  UCSBRecommendationRequestRepository ucsbRecommendationRequest;
 
   /**
    * List all records in table
@@ -33,6 +36,7 @@ public class UCSBRecommendationRequestController extends ApiController {
    */
   @Operation(summary = "List all records")
   @PreAuthorize("hasRole('ROLE_USER')")
+
   @GetMapping("/all")
   public Iterable<UCSBRecommendationRequest> allRecords() {
     Iterable<UCSBRecommendationRequest> records = ucsbRecommendationRequest.findAll();
@@ -42,14 +46,13 @@ public class UCSBRecommendationRequestController extends ApiController {
   /**
    * Create a new record
    *
-   * @param requesterEmail done
+   * @param requesterEmail
    * @param professorEmail
    * @param explanation
    * @param dateRequested
    * @param dateNeeded
    * @param done
-   * @param localDateTime done
-   * @return the saved reccord
+   * @return the saved record
    */
   @Operation(summary = "Create a new record")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -58,22 +61,15 @@ public class UCSBRecommendationRequestController extends ApiController {
       @Parameter(name = "requesterEmail") @RequestParam String requesterEmail,
       @Parameter(name = "professorEmail") @RequestParam String professorEmail,
       @Parameter(name = "explanation") @RequestParam String explanation,
-      @Parameter(name = "dateRequested") @RequestParam LocalDateTime dateRequested,
       @Parameter(name = "dateNeeded") @RequestParam LocalDateTime dateNeeded,
       @Parameter(name = "done") @RequestParam Boolean done,
-      @Parameter(
-              name = "localDateTime",
-              description =
-                  "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)")
-          @RequestParam("localDateTime")
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime localDateTime)
+      @Parameter(name = "dateRequested", description = "date (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("dateRequested") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRequested)
       throws JsonProcessingException {
 
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-    log.info("localDateTime={}", localDateTime);
+    log.info("localDateTime={}", dateRequested);
 
     UCSBRecommendationRequest record = new UCSBRecommendationRequest();
     record.setRequesterEmail(requesterEmail);
@@ -82,9 +78,6 @@ public class UCSBRecommendationRequestController extends ApiController {
     record.setDateRequested(dateRequested);
     record.setDateNeeded(dateNeeded);
     record.setDone(done);
-
-    record.setLocalDateTime(localDateTime);
-
     UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);
 
     return savedRecRequest;

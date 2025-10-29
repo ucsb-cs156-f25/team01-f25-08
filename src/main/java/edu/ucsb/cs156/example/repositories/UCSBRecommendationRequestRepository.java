@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 /** The UCSBDateRepository is a repository for UCSBDate entities. */
 @Repository
 public interface UCSBRecommendationRequestRepository
-    extends CrudRepository<UCSBRecommendationRequest, Long> {}
+        extends CrudRepository<UCSBRecommendationRequest, Long> {
+}
