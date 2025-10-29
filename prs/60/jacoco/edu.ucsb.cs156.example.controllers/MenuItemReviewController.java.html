@@ -95,12 +95,12 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public MenuItemReview getById(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="nc" id="L98">    MenuItemReview menuitemreview =</span>
+<span class="fc" id="L98">    MenuItemReview menuitemreview =</span>
         menuItemReviewRepository
-<span class="nc" id="L100">            .findById(id)</span>
-<span class="nc" id="L101">            .orElseThrow(() -&gt; new EntityNotFoundException(MenuItemReview.class, id));</span>
+<span class="fc" id="L100">            .findById(id)</span>
+<span class="fc" id="L101">            .orElseThrow(() -&gt; new EntityNotFoundException(MenuItemReview.class, id));</span>
 
-<span class="nc" id="L103">    return menuitemreview;</span>
+<span class="fc" id="L103">    return menuitemreview;</span>
   }
 
   /**
@@ -116,20 +116,20 @@ import org.springframework.web.bind.annotation.RestController;
   public MenuItemReview updateMenuItemReview(
       @Parameter(name = &quot;id&quot;) @RequestParam Long id, @RequestBody @Valid MenuItemReview incoming) {
 
-<span class="nc" id="L119">    MenuItemReview menuItemReview =</span>
+<span class="fc" id="L119">    MenuItemReview menuItemReview =</span>
         menuItemReviewRepository
-<span class="nc" id="L121">            .findById(id)</span>
-<span class="nc" id="L122">            .orElseThrow(() -&gt; new EntityNotFoundException(MenuItemReview.class, id));</span>
+<span class="fc" id="L121">            .findById(id)</span>
+<span class="fc" id="L122">            .orElseThrow(() -&gt; new EntityNotFoundException(MenuItemReview.class, id));</span>
 
-<span class="nc" id="L124">    menuItemReview.setComments(incoming.getComments());</span>
-<span class="nc" id="L125">    menuItemReview.setDateReviewed(incoming.getDateReviewed());</span>
-<span class="nc" id="L126">    menuItemReview.setItemId(incoming.getItemId());</span>
-<span class="nc" id="L127">    menuItemReview.setReviewerEmail(incoming.getReviewerEmail());</span>
-<span class="nc" id="L128">    menuItemReview.setStars(incoming.getStars());</span>
+<span class="fc" id="L124">    menuItemReview.setComments(incoming.getComments());</span>
+<span class="fc" id="L125">    menuItemReview.setDateReviewed(incoming.getDateReviewed());</span>
+<span class="fc" id="L126">    menuItemReview.setItemId(incoming.getItemId());</span>
+<span class="fc" id="L127">    menuItemReview.setReviewerEmail(incoming.getReviewerEmail());</span>
+<span class="fc" id="L128">    menuItemReview.setStars(incoming.getStars());</span>
 
-<span class="nc" id="L130">    menuItemReviewRepository.save(menuItemReview);</span>
+<span class="fc" id="L130">    menuItemReviewRepository.save(menuItemReview);</span>
 
-<span class="nc" id="L132">    return menuItemReview;</span>
+<span class="fc" id="L132">    return menuItemReview;</span>
   }
 
   /**
