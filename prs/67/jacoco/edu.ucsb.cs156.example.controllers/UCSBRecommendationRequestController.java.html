@@ -50,12 +50,12 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public UCSBRecommendationRequest getById(@Parameter(name = &quot;id&quot;) @RequestParam Long id) {
-<span class="nc" id="L53">    UCSBRecommendationRequest record =</span>
+<span class="fc" id="L53">    UCSBRecommendationRequest record =</span>
         ucsbRecommendationRequest
-<span class="nc" id="L55">            .findById(id)</span>
-<span class="nc" id="L56">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
+<span class="fc" id="L55">            .findById(id)</span>
+<span class="fc" id="L56">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBRecommendationRequest.class, id));</span>
 
-<span class="nc" id="L58">    return record;</span>
+<span class="fc" id="L58">    return record;</span>
   }
 
   /**
