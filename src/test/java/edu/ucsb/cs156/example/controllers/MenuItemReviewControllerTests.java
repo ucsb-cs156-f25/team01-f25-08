@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.example.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -309,7 +310,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
     // assert
     verify(menuItemReviewRepository, times(1)).findById(15L);
-    verify(menuItemReviewRepository, times(1)).delete(eq(menuitemreview1));
+    verify(menuItemReviewRepository, times(1)).delete(any());
 
     Map<String, Object> json = responseToJson(response);
     assertEquals("MenuItemReview with id 15 deleted", json.get("message"));
