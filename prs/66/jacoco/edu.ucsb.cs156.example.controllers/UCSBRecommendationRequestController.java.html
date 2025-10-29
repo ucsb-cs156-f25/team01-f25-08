@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;UCSBRecommendationRequest&quot;)
 @RequestMapping(&quot;/api/ucsbrecommendationrequest&quot;)
 @RestController
-<span class="nc" id="L26">@Slf4j</span>
-<span class="nc" id="L27">public class UCSBRecommendationRequestController extends ApiController {</span>
+<span class="fc" id="L26">@Slf4j</span>
+<span class="fc" id="L27">public class UCSBRecommendationRequestController extends ApiController {</span>
 
   @Autowired
   UCSBRecommendationRequestRepository ucsbRecommendationRequest;
@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBRecommendationRequest&gt; allRecords() {
-<span class="nc" id="L42">    Iterable&lt;UCSBRecommendationRequest&gt; records = ucsbRecommendationRequest.findAll();</span>
-<span class="nc" id="L43">    return records;</span>
+<span class="fc" id="L42">    Iterable&lt;UCSBRecommendationRequest&gt; records = ucsbRecommendationRequest.findAll();</span>
+<span class="fc" id="L43">    return records;</span>
   }
 
   /**
@@ -69,18 +69,18 @@ import org.springframework.web.bind.annotation.RestController;
     // For an explanation of @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // See: https://www.baeldung.com/spring-date-parameters
 
-<span class="nc" id="L72">    log.info(&quot;localDateTime={}&quot;, dateRequested);</span>
+<span class="fc" id="L72">    log.info(&quot;localDateTime={}&quot;, dateRequested);</span>
 
-<span class="nc" id="L74">    UCSBRecommendationRequest record = new UCSBRecommendationRequest();</span>
-<span class="nc" id="L75">    record.setRequesterEmail(requesterEmail);</span>
-<span class="nc" id="L76">    record.setProfessorEmail(professorEmail);</span>
-<span class="nc" id="L77">    record.setExplanation(explanation);</span>
-<span class="nc" id="L78">    record.setDateRequested(dateRequested);</span>
-<span class="nc" id="L79">    record.setDateNeeded(dateNeeded);</span>
-<span class="nc" id="L80">    record.setDone(done);</span>
-<span class="nc" id="L81">    UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);</span>
+<span class="fc" id="L74">    UCSBRecommendationRequest record = new UCSBRecommendationRequest();</span>
+<span class="fc" id="L75">    record.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L76">    record.setProfessorEmail(professorEmail);</span>
+<span class="fc" id="L77">    record.setExplanation(explanation);</span>
+<span class="fc" id="L78">    record.setDateRequested(dateRequested);</span>
+<span class="fc" id="L79">    record.setDateNeeded(dateNeeded);</span>
+<span class="fc" id="L80">    record.setDone(done);</span>
+<span class="fc" id="L81">    UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);</span>
 
-<span class="nc" id="L83">    return savedRecRequest;</span>
+<span class="fc" id="L83">    return savedRecRequest;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
