@@ -38,6 +38,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
   // Authorization tests for /api/menuitemreview/admin/all
 
+  /////////// get all ///////////
   @Test
   public void logged_out_users_cannot_get_all() throws Exception {
     mockMvc
@@ -51,6 +52,39 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     mockMvc.perform(get("/api/menuitemreview/all")).andExpect(status().is(200)); // logged
   }
 
+  @WithMockUser(roles = {"USER"})
+  @Test
+  public void logged_in_user_can_get_all_menuitemreviews() throws Exception {
+
+    // arrange
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    MenuItemReview menuitemreview1 =
+        MenuItemReview.builder()
+            .itemId(1)
+            .reviewerEmail("krystellebaluyot@ucsb.edu")
+            .stars(4)
+            .dateReviewed(ldt1)
+            .comments("good")
+            .build();
+
+    ArrayList<MenuItemReview> expectedMenuItemReviews = new ArrayList<>();
+    expectedMenuItemReviews.add(menuitemreview1);
+
+    when(menuItemReviewRepository.findAll()).thenReturn(expectedMenuItemReviews);
+
+    // act
+    MvcResult response =
+        mockMvc.perform(get("/api/menuitemreview/all")).andExpect(status().isOk()).andReturn();
+
+    // assert
+
+    verify(menuItemReviewRepository, times(1)).findAll();
+    String expectedJson = mapper.writeValueAsString(expectedMenuItemReviews);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
+  }
+
+  /////////// get by id ////////////
   @Test
   public void logged_out_users_cannot_get_by_id() throws Exception {
     mockMvc
@@ -110,6 +144,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     assertEquals("MenuItemReview with id 7 not found", json.get("message"));
   }
 
+  /////////// put ///////////
   @Test
   public void logged_out_users_cannot_post() throws Exception {
     mockMvc.perform(post("/api/menuitemreview/post")).andExpect(status().is(403));
@@ -121,38 +156,6 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     mockMvc
         .perform(post("/api/menuitemreview/post"))
         .andExpect(status().is(403)); // only admins can post
-  }
-
-  @WithMockUser(roles = {"USER"})
-  @Test
-  public void logged_in_user_can_get_all_ucsbdates() throws Exception {
-
-    // arrange
-    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
-    MenuItemReview menuitemreview1 =
-        MenuItemReview.builder()
-            .itemId(1)
-            .reviewerEmail("krystellebaluyot@ucsb.edu")
-            .stars(4)
-            .dateReviewed(ldt1)
-            .comments("good")
-            .build();
-
-    ArrayList<MenuItemReview> expectedMenuItemReviews = new ArrayList<>();
-    expectedMenuItemReviews.add(menuitemreview1);
-
-    when(menuItemReviewRepository.findAll()).thenReturn(expectedMenuItemReviews);
-
-    // act
-    MvcResult response =
-        mockMvc.perform(get("/api/menuitemreview/all")).andExpect(status().isOk()).andReturn();
-
-    // assert
-
-    verify(menuItemReviewRepository, times(1)).findAll();
-    String expectedJson = mapper.writeValueAsString(expectedMenuItemReviews);
-    String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
   }
 
   @WithMockUser(roles = {"ADMIN", "USER"})
@@ -189,13 +192,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
-  @Test
-  public void logged_out_users_cannot_get_by_id() throws Exception {
-    mockMvc
-        .perform(get("/api/menuitemreview?id=7"))
-        .andExpect(status().is(403)); // logged out users can't get by id
-  }
-
+  /////////// post ///////////
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void admin_can_edit_an_existing_menuitemreview() throws Exception {
@@ -216,8 +213,8 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     MenuItemReview editedMenuItemReview =
         MenuItemReview.builder()
             .itemId(2)
-            .reviewerEmail("kbaluyot@ucsb.edu")
-            .stars(3)
+            .reviewerEmail("krystellebaluyot22@ucsb.edu")
+            .stars(1)
             .dateReviewed(ldt2)
             .comments("yum")
             .build();
@@ -240,7 +237,8 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
     // assert
     verify(menuItemReviewRepository, times(1)).findById(67L);
-    verify(menuItemReviewRepository, times(1)).save(editedMenuItemReview);
+    verify(menuItemReviewRepository, times(1))
+        .save(editedMenuItemReview); // should be saved with correct user
     String responseString = response.getResponse().getContentAsString();
     assertEquals(requestBody, responseString);
   }
@@ -252,16 +250,16 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    MenuItemReview menuitemreview1 =
+    MenuItemReview editedMenuItemReview =
         MenuItemReview.builder()
-            .itemId(1)
-            .reviewerEmail("krystellebaluyot@ucsb.edu")
-            .stars(4)
+            .itemId(2)
+            .reviewerEmail("krystellebaluyot22@ucsb.edu")
+            .stars(1)
             .dateReviewed(ldt1)
-            .comments("good")
+            .comments("yum")
             .build();
 
-    String requestBody = mapper.writeValueAsString(menuitemreview1);
+    String requestBody = mapper.writeValueAsString(editedMenuItemReview);
 
     when(menuItemReviewRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
@@ -282,10 +280,11 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     Map<String, Object> json = responseToJson(response);
     assertEquals("MenuItemReview with id 67 not found", json.get("message"));
   }
-  
+
+  /////////// delete ///////////
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void admin_can_delete_a_date() throws Exception {
+  public void admin_can_delete_a_menuitemreview() throws Exception {
     // arrange
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
