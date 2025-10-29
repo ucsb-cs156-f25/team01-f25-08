@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -136,5 +137,24 @@ public class UCSBRecommendationRequestController extends ApiController {
     ucsbRecommendationRequest.save(request1);
 
     return request1;
+  }
+
+  /**
+   * Delete a UCSBRecommendationRequest
+   *
+   * @param id the id of the request to delete
+   * @return a message indicating the request was deleted
+   */
+  @Operation(summary = "Delete a UCSBRecommendationRequest")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @DeleteMapping("")
+  public Object deleteUCSBRecommendationRequest(@Parameter(name = "id") @RequestParam Long id) {
+    UCSBRecommendationRequest record2 =
+        ucsbRecommendationRequest
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBRecommendationRequest.class, id));
+
+    ucsbRecommendationRequest.delete(record2);
+    return genericMessage("UCSBRecommendationRequest with id %s deleted".formatted(id));
   }
 }
