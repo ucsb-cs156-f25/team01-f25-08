@@ -65,6 +65,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
 
     // arrange
     LocalDateTime rqt1 = LocalDateTime.parse("2025-10-28T19:08:00");
+    LocalDateTime rqt2 = LocalDateTime.parse("2026-10-28T19:08:00");
 
     HelpRequest helpRequest1 =
         HelpRequest.builder()
@@ -73,11 +74,21 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
             .tableOrBreakoutRoom("8")
             .requestTime(rqt1)
             .explanation("Test")
+            .solved(true)
+            .build();
+
+    HelpRequest helpRequest2 =
+        HelpRequest.builder()
+            .requesterEmail("test2@ucsb.edu")
+            .teamId("f25-09")
+            .tableOrBreakoutRoom("9")
+            .requestTime(rqt2)
+            .explanation("Test2")
             .solved(false)
             .build();
 
     ArrayList<HelpRequest> expectedHelpRequests = new ArrayList<>();
-    expectedHelpRequests.addAll(Arrays.asList(helpRequest1));
+    expectedHelpRequests.addAll(Arrays.asList(helpRequest1, helpRequest2));
 
     when(helpRequestRepository.findAll()).thenReturn(expectedHelpRequests);
 
@@ -97,7 +108,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
   public void an_admin_user_can_post_a_new_helprequest() throws Exception {
     // arrange
 
-    LocalDateTime rqt1 = LocalDateTime.parse("2026-01-03T00:00:00");
+    LocalDateTime rqt1 = LocalDateTime.parse("2025-10-28T19:08:00");
 
     HelpRequest helpRequest1 =
         HelpRequest.builder()
@@ -106,7 +117,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
             .tableOrBreakoutRoom("8")
             .requestTime(rqt1)
             .explanation("Test")
-            .solved(false)
+            .solved(true)
             .build();
 
     when(helpRequestRepository.save(eq(helpRequest1))).thenReturn(helpRequest1);
@@ -115,7 +126,7 @@ public class HelpRequestsControllerTests extends ControllerTestCase {
     MvcResult response =
         mockMvc
             .perform(
-                post("/api/helprequests/post?requesterEmail=test@ucsb.edu&teamId=f25-08&tableOrBreakoutRoom=8&requestTime=2026-01-03T00:00:00&explanation=Test&solved=false")
+                post("/api/helprequests/post?requesterEmail=test@ucsb.edu&teamId=f25-08&tableOrBreakoutRoom=8&requestTime=2025-10-28T19:08:00&explanation=Test&solved=true")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
