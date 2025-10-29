@@ -4,27 +4,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This is a JPA entity that represents a UCSBDate, i.e. an entry that comes from the UCSB API for
- * academic calendar dates.
+ * This is a JPA entity that represents a Help Request, i.e. an entry that comes from the UCSB API
+ * for academic calendar dates.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "ucsborganization")
-public class UCSBOrganization {
+@Entity(name = "helprequests")
+public class HelpRequest {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  private String orgCode;
-  private String orgTranslationShort;
-  private String orgTranslation;
-  boolean inactive;
+  private String requesterEmail;
+  private String teamId;
+  private String tableOrBreakoutRoom;
+  private LocalDateTime requestTime;
+  private String explanation;
+  private boolean solved;
 }
