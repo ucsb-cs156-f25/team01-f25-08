@@ -7,6 +7,7 @@ import edu.ucsb.cs156.example.repositories.MenuItemReviewRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,10 +47,10 @@ public class MenuItemReviewController extends ApiController {
   /**
    * Create a new menu item review
    *
-   * @param itemid the id in the UCSBDiningCommonsMenuItems table of a menu item
-   * @param revieweremail the email of the reviewer
+   * @param itemId the id in the UCSBDiningCommonsMenuItems table of a menu item
+   * @param reviewerEmail the email of the reviewer
    * @param stars 0 to 5 stars
-   * @param datereviewed the timestamp of the review
+   * @param dateReviewed the timestamp of the review
    * @param comments the comments in the review
    * @return the saved menu item review
    */
@@ -83,7 +86,54 @@ public class MenuItemReviewController extends ApiController {
   }
 
   /**
-   * Delete a Menu Item Review
+   * Get a single menu item review by id
+   *
+   * @param id the id of the date
+   * @return a MenuItemReview
+   */
+  @Operation(summary = "Get a single menu item review")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public MenuItemReview getById(@Parameter(name = "id") @RequestParam Long id) {
+    MenuItemReview menuitemreview =
+        menuItemReviewRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(MenuItemReview.class, id));
+
+    return menuitemreview;
+  }
+
+  /**
+   * Update a single menu item review
+   *
+   * @param id id of the menu item review to update
+   * @param incoming the new menu item review
+   * @return the updated menu item review object
+   */
+  @Operation(summary = "Update a menu item review")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PutMapping("")
+  public MenuItemReview updateMenuItemReview(
+      @Parameter(name = "id") @RequestParam Long id, @RequestBody @Valid MenuItemReview incoming) {
+
+    MenuItemReview menuItemReview =
+        menuItemReviewRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(MenuItemReview.class, id));
+
+    menuItemReview.setComments(incoming.getComments());
+    menuItemReview.setDateReviewed(incoming.getDateReviewed());
+    menuItemReview.setItemId(incoming.getItemId());
+    menuItemReview.setReviewerEmail(incoming.getReviewerEmail());
+    menuItemReview.setStars(incoming.getStars());
+
+    menuItemReviewRepository.save(menuItemReview);
+
+    return menuItemReview;
+  }
+
+  /**
+   * Delete a menu item review
    *
    * @param id the id of the menu item review to delete
    * @return a message indicating the menu item review was deleted
