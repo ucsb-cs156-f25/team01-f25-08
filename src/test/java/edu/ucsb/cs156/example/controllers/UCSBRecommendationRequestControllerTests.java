@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ucsb.cs156.example.ControllerTestCase;
@@ -24,13 +25,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 @WebMvcTest(controllers = UCSBRecommendationRequestController.class)
 @Import(TestConfig.class)
 public class UCSBRecommendationRequestControllerTests extends ControllerTestCase {
-  @MockBean UCSBRecommendationRequestRepository ucsbRecommendationRequestRepository;
+  @MockBean UCSBRecommendationRequestRepository ucsbRecommendationRequest;
 
   @MockBean UserRepository userRepository;
 
@@ -94,7 +96,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
     ArrayList<UCSBRecommendationRequest> requestsList = new ArrayList<>();
     requestsList.addAll(Arrays.asList(record1, record2));
 
-    when(ucsbRecommendationRequestRepository.findAll()).thenReturn(requestsList);
+    when(ucsbRecommendationRequest.findAll()).thenReturn(requestsList);
 
     // act
     MvcResult response =
@@ -105,7 +107,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
 
     // assert
 
-    verify(ucsbRecommendationRequestRepository, times(1)).findAll();
+    verify(ucsbRecommendationRequest, times(1)).findAll();
     String expectedJson = mapper.writeValueAsString(requestsList);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
@@ -128,7 +130,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
             .done(true)
             .build();
 
-    when(ucsbRecommendationRequestRepository.save(eq(record1))).thenReturn(record1);
+    when(ucsbRecommendationRequest.save(eq(record1))).thenReturn(record1);
 
     // act
     MvcResult response =
@@ -140,7 +142,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
             .andReturn();
 
     // assert
-    verify(ucsbRecommendationRequestRepository, times(1)).save(record1);
+    verify(ucsbRecommendationRequest, times(1)).save(record1);
     String expectedJson = mapper.writeValueAsString(record1);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
@@ -170,7 +172,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
             .done(true)
             .build();
 
-    when(ucsbRecommendationRequestRepository.findById(eq(7L))).thenReturn(Optional.of(record1));
+    when(ucsbRecommendationRequest.findById(eq(7L))).thenReturn(Optional.of(record1));
 
     // act
     MvcResult response =
@@ -181,7 +183,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
 
     // assert
 
-    verify(ucsbRecommendationRequestRepository, times(1)).findById(eq(7L));
+    verify(ucsbRecommendationRequest, times(1)).findById(eq(7L));
     String expectedJson = mapper.writeValueAsString(record1);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
@@ -193,7 +195,7 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
 
     // arrange
 
-    when(ucsbRecommendationRequestRepository.findById(eq(7L))).thenReturn(Optional.empty());
+    when(ucsbRecommendationRequest.findById(eq(7L))).thenReturn(Optional.empty());
 
     // act
     MvcResult response =
@@ -204,9 +206,96 @@ public class UCSBRecommendationRequestControllerTests extends ControllerTestCase
 
     // assert
 
-    verify(ucsbRecommendationRequestRepository, times(1)).findById(eq(7L));
+    verify(ucsbRecommendationRequest, times(1)).findById(eq(7L));
     Map<String, Object> json = responseToJson(response);
     assertEquals("EntityNotFoundException", json.get("type"));
     assertEquals("UCSBRecommendationRequest with id 7 not found", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_ucsbrequest() throws Exception {
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    LocalDateTime ldt2 = LocalDateTime.parse("2023-01-04T00:00:00");
+
+    UCSBRecommendationRequest record1 =
+        UCSBRecommendationRequest.builder()
+            .requesterEmail("sriya.vollala@gmail.com")
+            .professorEmail("sriyavollala@ucsb.edu")
+            .explanation("rara")
+            .dateNeeded(ldt1)
+            .dateRequested(ldt1)
+            .done(true)
+            .build();
+
+    UCSBRecommendationRequest record2 =
+        UCSBRecommendationRequest.builder()
+            .requesterEmail("s@gmail.com")
+            .professorEmail("s@ucsb.edu")
+            .explanation("yaya")
+            .dateNeeded(ldt2)
+            .dateRequested(ldt2)
+            .done(false)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(record2);
+
+    when(ucsbRecommendationRequest.findById(eq(67L))).thenReturn(Optional.of(record1));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsbrecommendationrequest?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(ucsbRecommendationRequest, times(1)).findById(67L);
+    verify(ucsbRecommendationRequest, times(1)).save(record2);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_ucsbrequest_that_does_not_exist() throws Exception {
+    // arrange
+
+    LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+    UCSBRecommendationRequest record2 =
+        UCSBRecommendationRequest.builder()
+            .requesterEmail("sriya.vollala@gmail.com")
+            .professorEmail("sriyavollala@ucsb.edu")
+            .explanation("rara")
+            .dateNeeded(ldt1)
+            .dateRequested(ldt1)
+            .done(true)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(record2);
+
+    when(ucsbRecommendationRequest.findById(eq(67L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsbrecommendationrequest?id=67")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(ucsbRecommendationRequest, times(1)).findById(67L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBRecommendationRequest with id 67 not found", json.get("message"));
   }
 }

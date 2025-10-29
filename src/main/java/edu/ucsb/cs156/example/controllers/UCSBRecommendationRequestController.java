@@ -7,6 +7,7 @@ import edu.ucsb.cs156.example.repositories.UCSBRecommendationRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,5 +105,36 @@ public class UCSBRecommendationRequestController extends ApiController {
     UCSBRecommendationRequest savedRecRequest = ucsbRecommendationRequest.save(record);
 
     return savedRecRequest;
+  }
+
+  /**
+   * Update a single date
+   *
+   * @param id id of the request to update
+   * @param incoming the new rerquest
+   * @return the updated request object
+   */
+  @Operation(summary = "Update a single request")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PutMapping("")
+  public UCSBRecommendationRequest updateRequest(
+      @Parameter(name = "id") @RequestParam Long id,
+      @RequestBody @Valid UCSBRecommendationRequest incoming) {
+
+    UCSBRecommendationRequest request1 =
+        ucsbRecommendationRequest
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UCSBRecommendationRequest.class, id));
+
+    request1.setRequesterEmail(incoming.getRequesterEmail());
+    request1.setProfessorEmail(incoming.getProfessorEmail());
+    request1.setExplanation(incoming.getExplanation());
+    request1.setDateRequested(incoming.getDateRequested());
+    request1.setDateNeeded(incoming.getDateNeeded());
+    request1.setDone(incoming.getDone());
+    ;
+    ucsbRecommendationRequest.save(request1);
+
+    return request1;
   }
 }
