@@ -2,8 +2,8 @@
     "databaseChangeLog": [
       {
         "changeSet": {
-          "id": "MenuItemReviews-1",
-          "author": "krystelleb22",
+          "id": "HelpRequests-1",
+          "author": "varsha-nara",
           "preConditions": [
             {
               "onFail": "MARK_RAN"
@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "menuitemreviews"
+                    "tableName": "helprequests"
                   }
                 }
               ]
@@ -27,45 +27,50 @@
                       "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "menuitemreviews_pk"
+                        "primaryKeyName": "HELPREQUESTS_PK"
                       },
-                      "name": "ID",
+                      "name": "id",
                       "type": "BIGINT"
                     }
                   },
                   {
                     "column": {
-                      "name": "ITEM_ID",
-                      "type": "BIGINT"
-                    }
-                  },
-                  {
-                    "column": {
-                      "name": "REVIEWER_EMAIL",
+                      "name": "requester_email",
                       "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "STARS",
-                      "type": "INT"
+                      "name": "team_id",
+                      "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "DATE_REVIEWED",
+                      "name": "table_or_breakout_room",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "request_time",
                       "type": "TIMESTAMP"
                     }
                   },
                   {
                     "column": {
-                      "name": "COMMENTS",
-                      "type": "TEXT"
+                      "name": "explanation",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "solved",
+                      "type": "BOOLEAN"
                     }
                   }
-                  
                 ],
-                "tableName": "menuitemreviews"
+                "tableName": "helprequests"
               }
             }
           ]
