@@ -189,9 +189,16 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
+  @Test
+  public void logged_out_users_cannot_get_by_id() throws Exception {
+    mockMvc
+        .perform(get("/api/menuitemreview?id=7"))
+        .andExpect(status().is(403)); // logged out users can't get by id
+  }
+
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void admin_can_edit_an_existing_ucsbdate() throws Exception {
+  public void admin_can_edit_an_existing_menuitemreview() throws Exception {
     // arrange
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
@@ -209,8 +216,8 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     MenuItemReview editedMenuItemReview =
         MenuItemReview.builder()
             .itemId(2)
-            .reviewerEmail("krystellebaluyot22@ucsb.edu")
-            .stars(1)
+            .reviewerEmail("kbaluyot@ucsb.edu")
+            .stars(3)
             .dateReviewed(ldt2)
             .comments("yum")
             .build();
@@ -233,8 +240,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
     // assert
     verify(menuItemReviewRepository, times(1)).findById(67L);
-    verify(menuItemReviewRepository, times(1))
-        .save(editedMenuItemReview); // should be saved with correct user
+    verify(menuItemReviewRepository, times(1)).save(editedMenuItemReview);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(requestBody, responseString);
   }
@@ -246,16 +252,16 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
 
     LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
-    MenuItemReview editedMenuItemReview =
+    MenuItemReview menuitemreview1 =
         MenuItemReview.builder()
-            .itemId(2)
-            .reviewerEmail("krystellebaluyot22@ucsb.edu")
-            .stars(1)
+            .itemId(1)
+            .reviewerEmail("krystellebaluyot@ucsb.edu")
+            .stars(4)
             .dateReviewed(ldt1)
-            .comments("yum")
+            .comments("good")
             .build();
 
-    String requestBody = mapper.writeValueAsString(editedMenuItemReview);
+    String requestBody = mapper.writeValueAsString(menuitemreview1);
 
     when(menuItemReviewRepository.findById(eq(67L))).thenReturn(Optional.empty());
 
@@ -276,7 +282,7 @@ public class MenuItemReviewControllerTests extends ControllerTestCase {
     Map<String, Object> json = responseToJson(response);
     assertEquals("MenuItemReview with id 67 not found", json.get("message"));
   }
-
+  
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void admin_can_delete_a_date() throws Exception {
